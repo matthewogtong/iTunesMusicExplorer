@@ -10,23 +10,27 @@ import Combine
 
 class SongListViewModel: ObservableObject {
 
-    @Published private(set) var songs: [Song] = []
-    @Published var isLoading: Bool = false
+    @Published var songs: [Song] = []
+    @Published var isLoading = false
+    private let networkManager: NetworkManager
 
-    let networkService = NetworkService()
+    init(networkManager: NetworkManager = NetworkService()) {
+        self.networkManager = networkManager
+    }
 
-    func fetchRequest() {
-        networkService.fetchRequest { [weak self] result in
-
+    func fetchRequest(query: String = "beyonce") {
+        isLoading = true
+        networkManager.fetchRequest(query: query) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let songs):
-                    let filteredSongs = songs.filter { $0.wrapperType == "collection" || $0.wrapperType == "artist" }
-                    self?.songs = filteredSongs
+                    self?.songs = songs
                 case .failure(let error):
-                    print("Error fetching data: \(error)")
+                    print(error.localizedDescription)
                 }
+                self?.isLoading = false
             }
         }
     }
+
 }

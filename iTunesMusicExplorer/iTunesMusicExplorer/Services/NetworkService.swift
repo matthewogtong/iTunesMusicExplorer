@@ -8,14 +8,15 @@
 import Foundation 
 
 protocol NetworkManager {
-    func fetchRequest(completion: @escaping (Result<[Song], Error>) -> Void)
+    func fetchRequest(query: String, completion: @escaping (Result<[Song], Error>) -> Void)
 }
 
 class NetworkService: NetworkManager {
 
 
-    func fetchRequest(completion: @escaping (Result<[Song], Error>) -> Void) {
-        let urlString = APIConstants.baseURL
+    func fetchRequest(query: String, completion: @escaping (Result<[Song], Error>) -> Void) {
+        let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let urlString = APIConstants.baseURL + "?term=\(encodedQuery)&limit=25&media=music&entity=musicArtist,musicTrack,album,mix,song"
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 100)))
             return
