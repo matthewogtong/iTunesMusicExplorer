@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FE45F58A29C4004C00FA8A6C /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE45F58929C4004C00FA8A6C /* SearchBar.swift */; };
 		FEC2E77B29C3E4CD00BBEC92 /* iTunesMusicExplorerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC2E77A29C3E4CD00BBEC92 /* iTunesMusicExplorerApp.swift */; };
 		FEC2E77D29C3E4CD00BBEC92 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC2E77C29C3E4CD00BBEC92 /* ContentView.swift */; };
 		FEC2E77F29C3E4CE00BBEC92 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEC2E77E29C3E4CE00BBEC92 /* Assets.xcassets */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FE45F58929C4004C00FA8A6C /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		FEC2E77729C3E4CD00BBEC92 /* iTunesMusicExplorer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTunesMusicExplorer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEC2E77A29C3E4CD00BBEC92 /* iTunesMusicExplorerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iTunesMusicExplorerApp.swift; sourceTree = "<group>"; };
 		FEC2E77C29C3E4CD00BBEC92 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				FEC2E7B829C3E62A00BBEC92 /* SongRow.swift */,
+				FE45F58929C4004C00FA8A6C /* SearchBar.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				FEC2E7B929C3E62A00BBEC92 /* SongRow.swift in Sources */,
 				FEC2E7B729C3E61A00BBEC92 /* SongListView.swift in Sources */,
 				FEC2E77B29C3E4CD00BBEC92 /* iTunesMusicExplorerApp.swift in Sources */,
+				FE45F58A29C4004C00FA8A6C /* SearchBar.swift in Sources */,
 				FEC2E7B329C3E5C100BBEC92 /* NetworkService.swift in Sources */,
 				FEC2E7B129C3E58C00BBEC92 /* APIConstants.swift in Sources */,
 				FEC2E7B529C3E5EC00BBEC92 /* Song.swift in Sources */,

@@ -49,10 +49,28 @@ struct SongListView: View {
                     ProgressView()
                 } else {
                     List {
-                        ForEach(groupedSongs().keys.sorted(), id: \.self) { key in
-                            Section(header: Text(key)) {
-                                ForEach(groupedSongs()[key] ?? []) { song in
+                        if selectedGroupBy == .album {
+                            Section(header: Text("Album")) {
+                                ForEach(songListViewModel.songs.filter { $0.kind == nil }) { song in
                                     SongRow(song: song)
+                                }
+                            }
+                        }
+                        if selectedGroupBy == .musicVideo {
+                            ForEach(groupedSongs().keys.sorted(), id: \.self) { key in
+                                Section(header: Text(key)) {
+                                    ForEach(songListViewModel.songs.filter { $0.kind == GroupBy.musicVideo.rawValue && $0.kind == key }) { song in
+                                        SongRow(song: song)
+                                    }
+                                }
+                            }
+                        }
+                        if selectedGroupBy == .song {
+                            ForEach(groupedSongs().keys.sorted(), id: \.self) { key in
+                                Section(header: Text(key)) {
+                                    ForEach(songListViewModel.songs.filter { $0.kind == GroupBy.song.rawValue && $0.kind == key }) { song in
+                                        SongRow(song: song)
+                                    }
                                 }
                             }
                         }

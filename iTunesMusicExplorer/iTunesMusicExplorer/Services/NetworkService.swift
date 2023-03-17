@@ -5,7 +5,7 @@
 //  Created by Matthew Ogtong on 3/16/23.
 //
 
-import Foundation
+import Foundation 
 
 protocol NetworkManager {
     func fetchRequest(completion: @escaping (Result<[Song], Error>) -> Void)
