@@ -8,5 +8,5 @@
 import Foundation
 
 enum APIConstants {
-    static let baseURL = "http://itunes.apple.com/search?term=beyonce&limit=25&media=music&entity=musicArtist,musicTrack,album,mix,song"
+    static let baseURL = "http://itunes.apple.com/search"
 }
