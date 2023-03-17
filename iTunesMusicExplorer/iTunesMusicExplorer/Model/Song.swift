@@ -7,18 +7,17 @@
 
 import Foundation
 
-// artistName, trackName, collectionName, kind, artworkUrl100
-
 struct InitialResponse: Codable {
     var resultCount: Int
     var results: [Song]
 }
 
 struct Song: Codable, Identifiable {
-    var id: String {" \(artistName) + \(artworkUrl100)"}
+    var id: String {" \(artistName) + \(artworkUrl100 ?? "")"}
     let artistName: String?
-    var trackName: String?
+    let trackName: String?
     let collectionName: String?
     let kind: String?
+    let wrapperType: String?
     let artworkUrl100: String?
 }

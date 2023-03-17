@@ -21,7 +21,8 @@ class SongListViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let songs):
-                    self?.songs = songs
+                    let filteredSongs = songs.filter { $0.wrapperType == "collection" || $0.wrapperType == "artist" }
+                    self?.songs = filteredSongs
                 case .failure(let error):
                     print("Error fetching data: \(error)")
                 }

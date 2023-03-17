@@ -18,12 +18,19 @@ struct SongRow: View {
             Text(song.kind ?? "")
             Text(song.trackName ?? "")
             Text(song.artworkUrl100 ?? "")
+            if let urlString = song.artworkUrl100, let url = URL(string: urlString) {
+                AsyncImage(url: url) { image in
+                    image.resizable().scaledToFit()
+                } placeholder: {
+                    ProgressView()
+                }
+            }
         }
     }
 }
 
 struct SongRow_Previews: PreviewProvider {
     static var previews: some View {
-        SongRow(song: Song(artistName: "Artist", trackName: "trackName", collectionName: "collectionName", kind: "kind", artworkUrl100: "artworkUrl100"))
+        SongRow(song: Song(artistName: "Artist", trackName: "trackName", collectionName: "collectionName", kind: "kind", wrapperType: "wrapperType", artworkUrl100: "artworkUrl100"))
     }
 }
