@@ -28,7 +28,7 @@ struct SongRow: View {
                 Text(song.trackName ?? "")
                     .font(.headline)
                 Text(song.artistName ?? "")
-                    .font(.subheadline)
+                    .font(.headline)
                     .foregroundColor(.secondary)
                 Text(song.collectionName ?? "")
                     .font(.subheadline)

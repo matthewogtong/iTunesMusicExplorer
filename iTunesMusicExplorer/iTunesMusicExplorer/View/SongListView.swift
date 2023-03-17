@@ -19,6 +19,19 @@ struct SongListView: View {
     @State private var selectedGroupBy: GroupBy = .album
     @State private var searchText: String = ""
 
+    private var filteredSongs: [Song] {
+        if searchText.isEmpty {
+            return songListViewModel.songs
+        } else {
+            return songListViewModel.songs.filter { song in
+                let trackMatch = song.trackName?.localizedCaseInsensitiveContains(searchText) == true
+                let artistMatch = song.artistName?.localizedCaseInsensitiveContains(searchText) == true
+                let collectionMatch = song.collectionName?.localizedCaseInsensitiveContains(searchText) == true
+
+                return trackMatch || artistMatch || collectionMatch
+            }
+        }
+    }
     private func groupedSongs() -> [String: [Song]] {
         let songs = songListViewModel.songs.filter { $0.wrapperType == "collection" || $0.wrapperType == "artist" }
         var groupedSongs = [String: [Song]]()
@@ -78,12 +91,9 @@ struct SongListView: View {
                     if songListViewModel.isLoading {
                         ProgressView()
                     } else {
-                        List(songListViewModel.songs.filter {
-                            searchText.isEmpty || $0.trackName?.localizedCaseInsensitiveContains(searchText) == true
-                        }) { song in
+                        List(filteredSongs) { song in
                             SongRow(song: song)
                         }
-
                         .listStyle(GroupedListStyle())
                     }
                 }
