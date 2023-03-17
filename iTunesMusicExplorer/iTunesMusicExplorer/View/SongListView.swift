@@ -75,6 +75,7 @@ struct SongListView: View {
                         .listStyle(GroupedListStyle())
                         .edgesIgnoringSafeArea([])
                         .navigationTitle("Music")
+                        .padding(.bottom)
                     }
                 }
                 .navigationTitle("Music")
@@ -95,6 +96,8 @@ struct SongListView: View {
                             SongRow(song: song)
                         }
                         .listStyle(GroupedListStyle())
+                        .edgesIgnoringSafeArea([])
+                        .padding(.bottom)
                     }
                 }
                 .navigationTitle("Search")
@@ -104,6 +107,7 @@ struct SongListView: View {
                 Text("Search")
             }
         }
+        .tabBarBackground(color: .systemGray6) 
         .onAppear(perform: songListViewModel.fetchRequest)
     }
 
