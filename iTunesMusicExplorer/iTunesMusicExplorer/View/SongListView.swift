@@ -19,34 +19,6 @@ struct SongListView: View {
     @State private var selectedGroupBy: GroupBy = .album
     @State private var searchText: String = ""
 
-    private var filteredSongs: [Song] {
-        if searchText.isEmpty {
-            return songListViewModel.songs
-        } else {
-            return songListViewModel.songs.filter { song in
-                let trackMatch = song.trackName?.localizedCaseInsensitiveContains(searchText) == true
-                let artistMatch = song.artistName?.localizedCaseInsensitiveContains(searchText) == true
-                let collectionMatch = song.collectionName?.localizedCaseInsensitiveContains(searchText) == true
-
-                return trackMatch || artistMatch || collectionMatch
-            }
-        }
-    }
-    private func groupedSongs() -> [String: [Song]] {
-        let songs = songListViewModel.songs.filter { $0.wrapperType == "collection" || $0.wrapperType == "artist" }
-        var groupedSongs = [String: [Song]]()
-
-        switch selectedGroupBy {
-        case .album:
-            groupedSongs = Dictionary(grouping: songs.filter { $0.kind == nil }, by: { _ in "Album" })
-        case .musicVideo:
-            groupedSongs = Dictionary(grouping: songs.filter { $0.kind == GroupBy.musicVideo.rawValue }, by: { $0.kind ?? "" })
-        case .song:
-            groupedSongs = Dictionary(grouping: songs.filter { $0.kind == GroupBy.song.rawValue }, by: { $0.kind ?? "" })
-        }
-
-        return groupedSongs
-    }
 
     var body: some View {
         TabView {
@@ -87,6 +59,9 @@ struct SongListView: View {
             NavigationView {
                 VStack {
                     SearchBar(text: $searchText)
+                        .onChange(of: searchText) { _ in
+                            performSearch()
+                        }
 
                     if songListViewModel.isLoading {
                         ProgressView()
@@ -105,8 +80,46 @@ struct SongListView: View {
                 Text("Search")
             }
         }
-        .tabBarBackground(color: .systemGray6) 
-        .onAppear(perform: songListViewModel.fetchRequest)
+        .tabBarBackground(color: .systemGray6)
+        .onAppear {
+            songListViewModel.fetchRequest(query: "beyonce")
+        }
+    }
+
+    private var filteredSongs: [Song] {
+        if searchText.isEmpty {
+            return songListViewModel.songs
+        } else {
+            return songListViewModel.songs.filter { song in
+                let trackMatch = song.trackName?.localizedCaseInsensitiveContains(searchText) == true
+                let artistMatch = song.artistName?.localizedCaseInsensitiveContains(searchText) == true
+                let collectionMatch = song.collectionName?.localizedCaseInsensitiveContains(searchText) == true
+
+                return trackMatch || artistMatch || collectionMatch
+            }
+        }
+    }
+
+    private func performSearch() {
+        if !searchText.isEmpty {
+            songListViewModel.fetchRequest(query: searchText)
+        }
+    }
+
+    private func groupedSongs() -> [String: [Song]] {
+        let songs = songListViewModel.songs.filter { $0.wrapperType == "collection" || $0.wrapperType == "artist" }
+        var groupedSongs = [String: [Song]]()
+
+        switch selectedGroupBy {
+        case .album:
+            groupedSongs = Dictionary(grouping: songs.filter { $0.kind == nil }, by: { _ in "Album" })
+        case .musicVideo:
+            groupedSongs = Dictionary(grouping: songs.filter { $0.kind == GroupBy.musicVideo.rawValue }, by: { $0.kind ?? "" })
+        case .song:
+            groupedSongs = Dictionary(grouping: songs.filter { $0.kind == GroupBy.song.rawValue }, by: { $0.kind ?? "" })
+        }
+
+        return groupedSongs
     }
 
     struct SongListView_Previews: PreviewProvider {
