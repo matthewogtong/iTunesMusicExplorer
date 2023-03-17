@@ -13,13 +13,14 @@ struct SongRow: View {
 
     var body: some View {
         HStack {
-            if let urlString = song.artworkUrl100, let url = URL(string: urlString) {
-                AsyncImage(url: url) { image in
-                    image.resizable().scaledToFit()
-                } placeholder: {
-                    ProgressView()
-                }
+            AsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } placeholder: {
+                ProgressView()
             }
+            .frame(width: 100, height: 100)
 
             VStack(alignment: .leading) {
                 Text(song.artistName ?? "")
@@ -27,8 +28,10 @@ struct SongRow: View {
                 Text(song.collectionName ?? "")
             }
         }
+        .padding()
     }
 }
+
 
 
 struct SongRow_Previews: PreviewProvider {

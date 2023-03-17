@@ -13,7 +13,7 @@ struct InitialResponse: Codable {
 }
 
 struct Song: Codable, Identifiable {
-    var id: String {" \(artistName) + \(artworkUrl100 ?? "")"}
+    var id: String {" \(String(describing: artistName)) + \(artworkUrl100 ?? "")"}
     let artistName: String?
     let trackName: String?
     let collectionName: String?

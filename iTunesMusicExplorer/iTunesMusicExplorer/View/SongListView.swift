@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct SongListView: View {
 
     @StateObject private var songListViewModel = SongListViewModel()
@@ -22,11 +20,13 @@ struct SongListView: View {
             if songListViewModel.isLoading {
                 ProgressView()
             } else {
-                List {
-                    ForEach(groupedSongs().keys.sorted(), id: \.self) { key in
-                        Section(header: Text(key)) {
-                            ForEach(groupedSongs()[key] ?? []) { song in
-                                SongRow(song: song)
+                ScrollView {
+                    LazyVStack(spacing: 20) {
+                        ForEach(groupedSongs().keys.sorted(), id: \.self) { key in
+                            Section(header: Text(key)) {
+                                ForEach(groupedSongs()[key] ?? []) { song in
+                                    SongRow(song: song)
+                                }
                             }
                         }
                     }
