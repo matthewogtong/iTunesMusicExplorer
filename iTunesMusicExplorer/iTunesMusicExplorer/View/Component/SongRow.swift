@@ -36,7 +36,7 @@ struct SongRow: View {
             }
             .padding(10)
             .padding(.trailing, 5)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: 250, alignment: .leading)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color(.purple))
