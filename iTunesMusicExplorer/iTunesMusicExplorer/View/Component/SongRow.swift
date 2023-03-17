@@ -12,23 +12,41 @@ struct SongRow: View {
     let song: Song
 
     var body: some View {
-        HStack {
+        HStack(alignment: .center) {
             AsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
+                    .clipShape(Circle())
             } placeholder: {
                 ProgressView()
             }
-            .frame(width: 100, height: 100)
+            .frame(width: 80, height: 80)
+            .padding(.trailing, 10)
 
-            VStack(alignment: .leading) {
-                Text(song.artistName ?? "")
+            VStack(alignment: .leading, spacing: 5) {
                 Text(song.trackName ?? "")
+                    .font(.headline)
+                Text(song.artistName ?? "")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
                 Text(song.collectionName ?? "")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
+            .padding(10)
+            .padding(.trailing, 5)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color(.purple))
+            )
         }
-        .padding()
+        .padding(.vertical, 5)
+        .padding(.horizontal, 10)
+        .background(Color(.systemBackground))
+        .cornerRadius(10)
+        .shadow(radius: 5)
     }
 }
 
