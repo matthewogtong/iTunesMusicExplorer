@@ -75,7 +75,6 @@ struct SongListView: View {
                         .listStyle(GroupedListStyle())
                         .edgesIgnoringSafeArea([])
                         .navigationTitle("Music")
-                        .padding(.bottom)
                     }
                 }
                 .navigationTitle("Music")
@@ -97,7 +96,6 @@ struct SongListView: View {
                         }
                         .listStyle(GroupedListStyle())
                         .edgesIgnoringSafeArea([])
-                        .padding(.bottom)
                     }
                 }
                 .navigationTitle("Search")
