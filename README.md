@@ -11,4 +11,7 @@ iTunesMusicExplorer is an iOS app for searching and browsing music artists and t
 - Pull-down refresh and search field for enhanced navigation
 
 ## Showcase
-![](Resources/KeyNote_SS_001.png)
+![](Resources/iTunesMusicExplorer_Showcase_001.png)
+
+## Demo
+![](Resources/iTunesMusicExplorer_iPhone_14_Pro_Max_Demo.gif)
