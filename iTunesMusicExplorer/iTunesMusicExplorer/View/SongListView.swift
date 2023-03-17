@@ -17,6 +17,7 @@ struct SongListView: View {
 
     @StateObject private var songListViewModel = SongListViewModel()
     @State private var selectedGroupBy: GroupBy = .album
+    @State private var searchText: String = ""
 
     private func groupedSongs() -> [String: [Song]] {
         let songs = songListViewModel.songs.filter { $0.wrapperType == "collection" || $0.wrapperType == "artist" }
@@ -35,50 +36,63 @@ struct SongListView: View {
     }
 
     var body: some View {
-        NavigationView {
-            VStack {
-                Picker(selection: $selectedGroupBy, label: Text("Group by")) {
-                    ForEach(GroupBy.allCases, id: \.self) { groupBy in
-                        Text(groupBy.rawValue.capitalized).tag(groupBy)
+        TabView {
+            NavigationView {
+                VStack {
+                    Picker(selection: $selectedGroupBy, label: Text("Group by")) {
+                        ForEach(GroupBy.allCases, id: \.self) { groupBy in
+                            Text(groupBy.rawValue.capitalized).tag(groupBy)
+                        }
                     }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal, 20)
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding(.horizontal, 20)
 
-                if songListViewModel.isLoading {
-                    ProgressView()
-                } else {
-                    List {
-                        if selectedGroupBy == .album {
-                            Section(header: Text("Album")) {
-                                ForEach(songListViewModel.songs.filter { $0.kind == nil }) { song in
-                                    SongRow(song: song)
-                                }
-                            }
-                        }
-                        if selectedGroupBy == .musicVideo {
+                    if songListViewModel.isLoading {
+                        ProgressView()
+                    } else {
+                        List {
                             ForEach(groupedSongs().keys.sorted(), id: \.self) { key in
                                 Section(header: Text(key)) {
-                                    ForEach(songListViewModel.songs.filter { $0.kind == GroupBy.musicVideo.rawValue && $0.kind == key }) { song in
+                                    ForEach(groupedSongs()[key] ?? []) { song in
                                         SongRow(song: song)
                                     }
                                 }
                             }
                         }
-                        if selectedGroupBy == .song {
-                            ForEach(groupedSongs().keys.sorted(), id: \.self) { key in
-                                Section(header: Text(key)) {
-                                    ForEach(songListViewModel.songs.filter { $0.kind == GroupBy.song.rawValue && $0.kind == key }) { song in
-                                        SongRow(song: song)
-                                    }
-                                }
-                            }
-                        }
+                        .listStyle(GroupedListStyle())
+                        .edgesIgnoringSafeArea([])
+                        .navigationTitle("Music")
                     }
-                    .listStyle(GroupedListStyle())
                 }
+                .navigationTitle("Music")
             }
-            .navigationTitle("Music")
+            .tabItem {
+                Image(systemName: "music.note.list")
+                Text("Music")
+            }
+
+            NavigationView {
+                VStack {
+                    SearchBar(text: $searchText)
+
+                    if songListViewModel.isLoading {
+                        ProgressView()
+                    } else {
+                        List(songListViewModel.songs.filter {
+                            searchText.isEmpty || $0.trackName?.localizedCaseInsensitiveContains(searchText) == true
+                        }) { song in
+                            SongRow(song: song)
+                        }
+
+                        .listStyle(GroupedListStyle())
+                    }
+                }
+                .navigationTitle("Search")
+            }
+            .tabItem {
+                Image(systemName: "magnifyingglass")
+                Text("Search")
+            }
         }
         .onAppear(perform: songListViewModel.fetchRequest)
     }
