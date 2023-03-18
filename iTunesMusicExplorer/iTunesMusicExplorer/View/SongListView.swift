@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct SongListView: View {
-
+    
     enum GroupBy: String, CaseIterable {
         case album
         case musicVideo = "music-video"
         case song
     }
-
-    @StateObject private var songListViewModel = SongListViewModel()
+    
+    @StateObject private var viewModel = SongListViewModel()
     @State private var selectedGroupBy: GroupBy = .album
     @State private var searchText: String = ""
-
-
+    
+    
     var body: some View {
         TabView {
             NavigationView {
@@ -31,20 +31,23 @@ struct SongListView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                     .padding(.horizontal, 20)
-
-                    if songListViewModel.isLoading {
+                    
+                    if viewModel.isLoading {
                         ProgressView()
                     } else {
-                        List {
-                            ForEach(groupedSongs().keys.sorted(), id: \.self) { key in
-                                Section(header: Text(key)) {
-                                    ForEach(groupedSongs()[key] ?? []) { song in
-                                        SongRow(song: song)
+                        ScrollView {
+                            LazyVStack {
+                                ForEach(groupedSongs().keys.sorted(), id: \.self) { key in
+                                    Section(header: Text(key)) {
+                                        ForEach(groupedSongs()[key] ?? []) { song in
+                                            SongRow(song: song)
+                                        }
                                     }
                                 }
                             }
                         }
-                        .listStyle(GroupedListStyle())
+                        
+                        
                         .edgesIgnoringSafeArea([])
                         .navigationTitle("Music")
                     }
@@ -55,15 +58,15 @@ struct SongListView: View {
                 Image(systemName: "music.note.list")
                 Text("Music")
             }
-
+            
             NavigationView {
                 VStack {
                     SearchBar(text: $searchText)
                         .onChange(of: searchText) { _ in
                             performSearch()
                         }
-
-                    if songListViewModel.isLoading {
+                    
+                    if viewModel.isLoading {
                         ProgressView()
                     } else {
                         List(filteredSongs) { song in
@@ -82,34 +85,34 @@ struct SongListView: View {
         }
         .tabBarBackground(color: .systemGray6)
         .onAppear {
-            songListViewModel.fetchRequest(query: "beyonce")
+            viewModel.fetchRequest(query: "beyonce")
         }
     }
-
+    
     private var filteredSongs: [Song] {
         if searchText.isEmpty {
-            return songListViewModel.songs
+            return viewModel.songs
         } else {
-            return songListViewModel.songs.filter { song in
+            return viewModel.songs.filter { song in
                 let trackMatch = song.trackName?.localizedCaseInsensitiveContains(searchText) == true
                 let artistMatch = song.artistName?.localizedCaseInsensitiveContains(searchText) == true
                 let collectionMatch = song.collectionName?.localizedCaseInsensitiveContains(searchText) == true
-
+                
                 return trackMatch || artistMatch || collectionMatch
             }
         }
     }
-
+    
     private func performSearch() {
         if !searchText.isEmpty {
-            songListViewModel.fetchRequest(query: searchText)
+            viewModel.fetchRequest(query: searchText)
         }
     }
-
+    
     private func groupedSongs() -> [String: [Song]] {
-        let songs = songListViewModel.songs.filter { $0.wrapperType == "collection" || $0.wrapperType == "artist" }
+        let songs = viewModel.songs.filter { $0.wrapperType == "collection" || $0.wrapperType == "artist" }
         var groupedSongs = [String: [Song]]()
-
+        
         switch selectedGroupBy {
         case .album:
             groupedSongs = Dictionary(grouping: songs.filter { $0.kind == nil }, by: { _ in "Album" })
@@ -118,10 +121,10 @@ struct SongListView: View {
         case .song:
             groupedSongs = Dictionary(grouping: songs.filter { $0.kind == GroupBy.song.rawValue }, by: { $0.kind ?? "" })
         }
-
+        
         return groupedSongs
     }
-
+    
     struct SongListView_Previews: PreviewProvider {
         static var previews: some View {
             SongListView()
